@@ -19,6 +19,12 @@ pub fn assignment() void {
     // typeを指定している場合には `undefined` を代入することが可能
     var  a: i32 = undefined;
     std.log.info("a {}", .{a}); // 何かしらの値にはなるっぽい
+
+    // 未使用の変数はコンパイルエラーになる
+    // var unused: i32 = 0;
+    // src/main.zig:24:9: error: unused local variable
+    //     var unused: i32 = 0;
+    //         ^
 }
 
 pub fn main() anyerror!void {
