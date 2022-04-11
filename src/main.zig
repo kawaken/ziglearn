@@ -60,7 +60,33 @@ pub fn arrays() void {
     //                     ^
 }
 
+pub fn if_() void {
+    const a = true;
+    if (a) {
+        std.log.info("true", .{});
+    }
+
+    const b = false;
+    if (!b) {
+        std.log.info("not false", .{});
+    }
+
+    const i = 1;
+    if (i == 0) {
+        // unreached
+    } else if (i == 1) {
+        std.log.info("else if", .{});
+    } else {
+        // unreached
+    }
+
+    // if は式なので値を返すことができる
+    const j = if (i == 0) 10 else 20;
+    std.log.info("{}", .{j});
+}
+
 pub fn main() anyerror!void {
     //assignment();
-    arrays();
+    //arrays();
+    if_();
 }
