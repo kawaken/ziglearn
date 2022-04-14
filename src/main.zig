@@ -85,8 +85,44 @@ pub fn if_() void {
     std.log.info("{}", .{j});
 }
 
+pub fn while_() void {
+    var i: u8 = 2;
+
+    // 100を超えるまで2倍になっていくので、i = 64 の時には実行される
+    while (i < 100) {
+        // 最後は 64 * 2 なので 128 となる
+        i *= 2;
+    }
+    std.log.info("i: {}", .{i}); // i: 128
+
+    var sum: u8 = 0;
+    var j: u8 = 1;
+    
+    // continue expression はブロックを抜ける際に実行される
+    while (j <= 10) : (j += 1) {
+        // 1, 2 (1 + 1), 3 (2 + 1), ..., 10 まで表示される
+        std.log.info("j: {}", .{j});
+        sum += j;
+    }
+    std.log.info("sum: {}", .{sum}); // 55
+
+    while (j < 1) : (sum += 100) {
+        // do nothing
+    }
+    // 今回の continue expression は実行されないので 55 のまま
+    std.log.info("sum: {}", .{sum}); // 55
+
+    var k: u8 = 0;
+    while (k <= 3) : (k += 1) {
+        if (k == 1) continue;
+        if (k == 3) break;
+        std.log.info("k: {}", .{k}); // 0, 2
+    }
+}
+
 pub fn main() anyerror!void {
     //assignment();
     //arrays();
-    if_();
+    //if_();
+    while_();
 }
