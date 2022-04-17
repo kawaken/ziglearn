@@ -120,9 +120,32 @@ pub fn while_() void {
     }
 }
 
+pub fn for_() void {
+    const nums = [_]u8{10, 20, 30};
+
+    // 要素、インデックスの順で記述する
+    for (nums) |number, index| {
+        std.log.info("{} : {}", .{number, index});
+    }
+
+    // 単体だと要素になる
+    for (nums) |number| {
+        std.log.info("{}", .{number});
+    }
+
+    // _ を使用して利用しない値を無視できる
+    for (nums) |_, index| {
+        std.log.info("{}", .{index});
+
+        // もちろん対象は配列なのでインデックスで参照可能
+        std.log.info("{}", .{nums[index]});
+    }
+}
+
 pub fn main() anyerror!void {
     //assignment();
     //arrays();
     //if_();
-    while_();
+    //while_();
+    for_();
 }
