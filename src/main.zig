@@ -142,10 +142,49 @@ pub fn for_() void {
     }
 }
 
+fn add(x: u32, y: u32) u32 {
+    // 引数はイミュータブルなので再代入できない
+    // コンパイルエラーになる
+    // x = 10;
+    // ./src/main.zig:147:9: error: cannot assign to constant
+    //     x = 10;
+    return x + y;
+}
+
+fn fibonacci(n: u16) u16 {
+    if (n == 0 or n == 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+pub fn function() void {
+    const a = add(1, 2);
+    std.log.info("a: {}", .{a});
+
+    // 戻値を無視するときは明示的に記述する
+    _ = add(100, 200);
+
+    // コンパイルエラーになる
+    // add(100, 200);
+    // ./src/main.zig:158:8: error: expression value is ignored
+    //     add(100, 200);
+
+    // 再帰呼び出しはオーバーフローが発生する可能性があるのでunsafe
+    const x = fibonacci(24);
+    std.log.info("a: {}", .{x});
+
+    // 25 以降は u16 を超えるため panic が発生する
+    // コンパイルエラーではない
+    const y = fibonacci(25);
+    std.log.info("a: {}", .{y});
+
+    // thread 1118951 panic: integer overflow
+}
+
 pub fn main() anyerror!void {
     //assignment();
     //arrays();
     //if_();
     //while_();
-    for_();
+    //for_();
+    function();
 }
