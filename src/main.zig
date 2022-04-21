@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub fn assignment() void {
+fn assignment() void {
     const constant: i32 = 5; // 定数
     var variable: u32 = 5000; // 変数
 
@@ -31,7 +31,7 @@ pub fn assignment() void {
     //         ^
 }
 
-pub fn arrays() void {
+fn arrays() void {
     // a の type は配列リテラルから推論される
     const a = [5]u8{ 'h', 'e', 'l', 'l', 'o' };
 
@@ -60,7 +60,7 @@ pub fn arrays() void {
     //                     ^
 }
 
-pub fn if_() void {
+fn if_() void {
     const a = true;
     if (a) {
         std.log.info("true", .{});
@@ -85,7 +85,7 @@ pub fn if_() void {
     std.log.info("{}", .{j});
 }
 
-pub fn while_() void {
+fn while_() void {
     var i: u8 = 2;
 
     // 100を超えるまで2倍になっていくので、i = 64 の時には実行される
@@ -120,7 +120,7 @@ pub fn while_() void {
     }
 }
 
-pub fn for_() void {
+fn for_() void {
     const nums = [_]u8{10, 20, 30};
 
     // 要素、インデックスの順で記述する
@@ -156,7 +156,7 @@ fn fibonacci(n: u16) u16 {
     return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
-pub fn function() void {
+fn function() void {
     const a = add(1, 2);
     std.log.info("a: {}", .{a});
 
