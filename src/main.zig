@@ -180,11 +180,27 @@ fn function() void {
     // thread 1118951 panic: integer overflow
 }
 
+fn defer_() void {
+    std.log.info("enter", .{});
+    {
+        // このブロックを抜ける際に実行されるので enter の次に出力される
+        defer std.log.info("defer1", .{});
+    }
+    // defer は後から定義されたものが先に実行されるので defer3 の次に出力される
+    defer std.log.info("defer2", .{});
+
+    // defer_ を抜ける際に実行されるので exit の次に出力される
+    defer std.log.info("defer3", .{});
+    
+    std.log.info("exit", .{});
+}
+
 pub fn main() anyerror!void {
     //assignment();
     //arrays();
     //if_();
     //while_();
     //for_();
-    function();
+    //function();
+    defer_();
 }
