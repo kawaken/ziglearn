@@ -170,13 +170,13 @@ fn function() void {
 
     // 再帰呼び出しはオーバーフローが発生する可能性があるのでunsafe
     const x = fibonacci(24);
-    std.log.info("a: {}", .{x});
+    std.log.info("x: {}", .{x});
+
+    // コンパイルエラーではない
+    //const y = fibonacci(25);
+    //std.log.info("y: {}", .{y});
 
     // 25 以降は u16 を超えるため panic が発生する
-    // コンパイルエラーではない
-    const y = fibonacci(25);
-    std.log.info("a: {}", .{y});
-
     // thread 1118951 panic: integer overflow
 }
 
