@@ -195,6 +195,27 @@ fn defer_() void {
     std.log.info("exit", .{});
 }
 
+fn import_() void {
+    // @import の引数にファイルの早退パスを指定する
+    // `.zig` の拡張子を省略することはできない
+    // @import は任意の箇所で呼び出し可能
+    const bar = @import("foo/bar.zig");
+
+    // pub がついたものは他ファイルから参照することが可能
+    bar.hello();
+    _ = bar.public;
+
+    // ついていないものは参照できないのでコンパイルエラーになる
+    _ = bar.private;
+
+    // ./src/main.zig:209:12: error: 'private' is private
+    //     _ = bar.private;
+    //            ^
+    // ./src/foo/bar.zig:4:1: note: declared here
+    // const private = "private";
+    // ^
+}
+
 pub fn main() anyerror!void {
     //assignment();
     //arrays();
@@ -202,5 +223,6 @@ pub fn main() anyerror!void {
     //while_();
     //for_();
     //function();
-    defer_();
+    //defer_();
+    import_();
 }
