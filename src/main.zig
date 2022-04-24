@@ -1,4 +1,5 @@
 const std = @import("std");
+const errors = @import("errors.zig");
 
 fn assignment() void {
     const constant: i32 = 5; // 定数
@@ -97,7 +98,7 @@ fn while_() void {
 
     var sum: u8 = 0;
     var j: u8 = 1;
-    
+
     // continue expression はブロックを抜ける際に実行される
     while (j <= 10) : (j += 1) {
         // 1, 2 (1 + 1), 3 (2 + 1), ..., 10 まで表示される
@@ -121,11 +122,11 @@ fn while_() void {
 }
 
 fn for_() void {
-    const nums = [_]u8{10, 20, 30};
+    const nums = [_]u8{ 10, 20, 30 };
 
     // 要素、インデックスの順で記述する
     for (nums) |number, index| {
-        std.log.info("{} : {}", .{number, index});
+        std.log.info("{} : {}", .{ number, index });
     }
 
     // 単体だと要素になる
@@ -191,7 +192,7 @@ fn defer_() void {
 
     // defer_ を抜ける際に実行されるので exit の次に出力される
     defer std.log.info("defer3", .{});
-    
+
     std.log.info("exit", .{});
 }
 
@@ -224,5 +225,6 @@ pub fn main() anyerror!void {
     //for_();
     //function();
     //defer_();
-    import_();
+    //import_();
+    errors.errors();
 }
