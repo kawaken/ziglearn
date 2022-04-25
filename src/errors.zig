@@ -32,6 +32,16 @@ fn tryError() error{Oops}!i32 {
     return 12;
 }
 
+var problem: u32 = 98;
+// ! の前の error の型は返される型から推論される
+fn errorDefer() !u32 {
+    errdefer problem += 1;
+    try failingFunction();
+
+    // ↑ error.Oops を返しているのでここは到達しない
+    return 1;
+}
+
 pub fn errors() void {
     const AllocationError = error{OutOfMemory};
     // FileOpenError ⊇ AllocationError として扱われる
@@ -61,10 +71,38 @@ pub fn errors() void {
     catchError();
 
     // tryError は error{Oops}!i32 なので値を受け取る必要がある
-    // ここでは ignore している
     _ = tryError() catch |terr| {
         std.log.info("Oops: {}", .{terr == error.Oops});
     };
+    
+    // label と break を使うとエラーと受け取りつつ処理して値を返すことができる
+    // 推奨された方法なのかどうか不明
+    // catch break 
+    const try_error = blk: {
+        if (tryError()) |num| {
+            // unreachable
+            std.log.info("num: {}", .{num});
+            break :blk num;
+        } else |terr| {
+            std.log.info("Oops: {}", .{terr == error.Oops});
+            break :blk 10;
+        }
+    };
 
-    // catch ブロックを利用して値を返す、というのがまだわからない
+    std.log.info("try_error: {}", .{try_error});
+
+    // catch label: { break :lable value } で値を返すことができる
+    const err_defer = errorDefer() catch blk: {
+        std.log.info("problem: {}", .{problem});
+        break :blk 100;
+    };
+    // catch で 100 を返しているので 100
+    std.log.info("err_defer: {}", .{err_defer});
+
+    // Error sets はマージできる
+    const A = error{Boo, Foo};
+    const B = error{Woo};
+    const C = A || B;
+
+    std.log.info("C: {}, {}, {}", .{C.Boo, C.Foo, C.Woo});
 }
