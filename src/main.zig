@@ -217,6 +217,39 @@ fn import_() void {
     // ^
 }
 
+fn switch_() void {
+    const a: i8 = 5;
+
+    switch (a) {
+        // ... は Range を表す。両端の値は含まれる。0 以上 5 以下
+        0...5 => std.log.info("0 以上 5 以下", .{}),
+    }
+
+    // 以下は 5 の場合の処理がないのでコンパイルエラーになる
+    // switch (a) {
+    //     0...4 => std.log.info("5未満", .{})
+    // }
+
+    switch (a) {
+        // 分岐の区切りは ,
+        0...4 => std.log.info("5未満", .{}),
+        else => std.log.info("else", .{}), // <- 最後の分岐のコンマも許容される、なくてもよい
+    }
+
+    // 式にもなる
+    const b = switch (a) {
+        0 => 0,
+        1 => 1,
+        else => a * 2,
+    };
+
+    std.log.info("b: {}", .{b});
+
+    // 分岐の指定のバグがある？
+    //const s = @import("switch_check.zig");
+    //s.check();
+}
+
 pub fn main() anyerror!void {
     //assignment();
     //arrays();
@@ -226,5 +259,6 @@ pub fn main() anyerror!void {
     //function();
     //defer_();
     //import_();
-    errors.errors();
+    //errors.errors();
+    switch_();
 }
