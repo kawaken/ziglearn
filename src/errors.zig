@@ -68,16 +68,44 @@ pub fn errors() void {
     // エラーだったので catch で指定された 100
     std.log.info("no_error: {}", .{catched_error});
 
+    // err はすでに const で定義済みなので再代入できずコンパイルエラーになる
+    // _ = mayby_error catch |err| {
+    //     std.log.info("error: {}", .{err});
+    // };
+
+    _ = mayby_error catch |captured_err| {
+        std.log.info("error: {}", .{captured_err});
+        // info: error: error.OutOfMemory
+    };
+
+    // captured_err は2回目だが catch でスコープが閉じているため再利用できる
+    _ = mayby_error catch |captured_err| {
+        std.log.info("error（2回目）: {}", .{captured_err});
+        // info: error: error.OutOfMemory
+    };
+
     catchError();
+
+    // catch label: { break :lable value } で値を返すことができる
+    const returned_value = mayby_error catch |captured_err| blk: {
+        std.log.info("error（3回目）: {}", .{captured_err});
+        break :blk 1000;
+    };
+    std.log.info("returned_value: {}", .{returned_value});
+    // info: returned_value: 1000
 
     // tryError は error{Oops}!i32 なので値を受け取る必要がある
     _ = tryError() catch |terr| {
         std.log.info("Oops: {}", .{terr == error.Oops});
     };
-    
-    // label と break を使うとエラーと受け取りつつ処理して値を返すことができる
-    // 推奨された方法なのかどうか不明
-    // catch break 
+
+    const t: anyerror!u8 = 10;
+    // try は xcath |err| return err なのでエラーで無ければ通常の値となる
+    const v = try t;
+    std.log.info("v: {}", .{v});
+    // info: v: 10
+
+    // if を使用して unwrap できる
     const try_error = blk: {
         if (tryError()) |num| {
             // unreachable
@@ -91,13 +119,11 @@ pub fn errors() void {
 
     std.log.info("try_error: {}", .{try_error});
 
-    // catch label: { break :lable value } で値を返すことができる
-    const err_defer = errorDefer() catch blk: {
+    _ = errorDefer() catch blk: {
+        // errodefer で +1 されているので 99 になる
         std.log.info("problem: {}", .{problem});
         break :blk 100;
     };
-    // catch で 100 を返しているので 100
-    std.log.info("err_defer: {}", .{err_defer});
 
     // Error sets はマージできる
     const A = error{Boo, Foo};
